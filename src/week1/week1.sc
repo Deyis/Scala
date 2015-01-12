@@ -19,9 +19,9 @@ class Rational(x:Int, y:Int) {
   def this(x:Int) = this(x, 1)
 
   private def gcd(a:Int, b:Int) : Int = if (b == 0) a else gcd(b, a%b)
-
-  def numer = x
-  def denom = y
+  private val g = gcd(x,y)
+  def numer = x/g
+  def denom = y/g
 
 
   def +(that: Rational) =
@@ -36,8 +36,7 @@ class Rational(x:Int, y:Int) {
   def max(that:Rational) = if(this < that) that else this
 
   override def toString() = {
-    val g = gcd(x,y)
-    numer/g + "/" + denom/g
+    numer + "/" + denom
   }
 }
 

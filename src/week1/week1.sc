@@ -27,9 +27,9 @@ class Rational(x:Int, y:Int) {
   def +(that: Rational) =
     new Rational(numer * that.denom + that.numer * denom, denom * that.denom)
 
-  def neg:Rational = new Rational(-numer, denom)
+  def unary_- :Rational = new Rational(-numer, denom)
 
-  def -(that:Rational) = this + that.neg
+  def -(that:Rational) = this + -that
 
   def <(that: Rational) = numer * that.denom < that.numer * denom
 

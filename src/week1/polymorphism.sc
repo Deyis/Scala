@@ -34,4 +34,10 @@ nth(0,list)
 nth(1,list)
 nth(2,list)
 
+object List {
+  def apply[T](x1: T, x2: T): List[T] = new Cons[T](x1, new Cons[T](x2, new Nil))
+  def apply[T]():List[T] = new Nil
+}
+
+List(1, 2)
 

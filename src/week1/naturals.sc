@@ -5,6 +5,7 @@ abstract class Nat {
   def +(other: Nat): Nat
   def -(other: Nat): Nat
 }
+
 object Zero extends Nat {
   override def isZero: Boolean = true
   override def predecessor: Nat = throw new Error("0.predecessor")
@@ -13,6 +14,7 @@ object Zero extends Nat {
     if(other.isZero) this
     else throw new Error("0.predecessor")
 }
+
 class Succ(n: Nat) extends Nat {
   override def isZero: Boolean = false
   override def +(other: Nat): Nat = new Succ(n + other)
@@ -21,6 +23,8 @@ class Succ(n: Nat) extends Nat {
     else n - other.predecessor
   override def predecessor: Nat = n
 }
+
+
 val s = Zero.successor + Zero.successor
 val t = s - Zero.successor
 t.predecessor

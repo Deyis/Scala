@@ -12,7 +12,7 @@ object Zero extends Nat {
   override def +(other: Nat): Nat = other
   override def -(other: Nat): Nat =
     if(other.isZero) this
-    else throw new Error("0.predecessor")
+    else throw new Error("0 - (? > 0)")
 }
 
 class Succ(n: Nat) extends Nat {

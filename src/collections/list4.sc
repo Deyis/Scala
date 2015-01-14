@@ -30,9 +30,15 @@ List(-1,1,-2,2,-3,3) span (x=> x<0)
 def pack[T](xs: List[T]): List[List[T]] = xs match {
   case Nil => Nil
   case x :: xs1 => {
-    val (frst, scnd): (List[T], List[T]) = xs.partition(y => y == x)
+    val (frst, scnd): (List[T], List[T]) = xs.span(y => y == x)
     frst :: pack(scnd)
   }
 }
 
 pack(List("a", "a", "a", "b", "c", "c", "a"))
+
+def encode[T](xs: List[T]): List[(T, Int)] =
+  pack(xs) map( ys => (ys.head, ys.length))
+
+encode(List("a", "a", "a", "b", "c", "c", "a"))
+

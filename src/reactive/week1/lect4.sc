@@ -1,5 +1,4 @@
 
-
 // monads
 
 trait  M[T] {
@@ -16,28 +15,31 @@ trait  M[T] {
 abstract class Try[+T] {
 
   def flatMap[U](f: T => Try[U]): Try[U] = this match {
-//    case Succes(x) => try f(x) catch { case NoneFatal(ex) => Fail(ex) }
-    case fail: Fail => fail
+    case Succes(x) => try f(x) catch { case NoneFatal(ex) => new Fail(ex) }
+    case Fail(x) => new Fail(x)
+//    case fail: Fail => fail
   }
 
   def map[U](f: T => U): Try[U] = this match {
 //    case Succes(x) => Try(f(x))
-    case fail: Fail => fail
+//    case fail: Fail => fail
+    case Succes(x) => try new Succes[U](f(x)) catch { case NoneFatal(ex) => new Fail(ex) }
+    case Fail(x) => new Fail(x)
   }
 
 }
 case class Succes[T](x:T) extends Try[T]
 case class Fail[T](ex:Exception) extends Try[Nothing]
 
-case class NoneFatal extends Exception
+case class NoneFatal(ex: Exception) extends Exception
 
 
-object Try extends Try[Any] {
+object Try extends Try {
 
   def apply[T](expr: => T): Try[T] =
-    try Succes(expr)
+    try new Succes(expr)
     catch {
-      case NoneFatal(ex) => Fail(ex)
+      case NoneFatal(ex) => new Fail(ex)
     }
 }
 
@@ -45,4 +47,7 @@ for {
   i <- Try(0 to 10)
 } yield i
 
-Try(0 to 10).map(i => i)
+for {
+  i <- Try({throw new NoneFatal(new Exception) })
+} yield i
+

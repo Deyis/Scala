@@ -10,13 +10,15 @@ trait Generator[T] {
   def generate: T
 
   def map[S](f: T => S): Generator[S] = new Generator[S] {
-    override def generate: S = {
-      val a = self.generate
-      if (self.ffilter(a)) {
-        f(a)
-      } else generate
+      override def generate: S = {
+        val a = self.generate
+        if (self.ffilter(a)) {
+          self.ffilter = self.defaultFilter
+          f(a)
+        } else
+          generate
+      }
     }
-  }
 
   def flatMap[S](f: T => Generator[S]):Generator[S] = new Generator[S] {
     override def generate: S = f(self.generate).generate
@@ -42,7 +44,7 @@ val bools2 = for(x <- integers) yield x > 0
 val pairs2 = for (x <- integers; y <- integers) yield (x, y)
 
 def choose(lo:Int, hi:Int): Generator[Int] =
-  for(x <- integers if x >= lo) yield lo + x % (hi - lo)
+  for(x <- integers if x >= 0) yield lo + x % (hi - lo)
 
 def choose2(lo:Int, hi:Int): Generator[Int] =
   integers.withFilter(y => y >= lo).map(x => lo + x % (hi - lo))
@@ -53,8 +55,6 @@ def oneOf[T](xs: T*): Generator[T] =
 def single[T](x:T) : Generator[T] = new Generator[T] {
   override def generate: T = x
 }
-
-
 def emptyLists = single(Nil)
 def nonEmptyLists = for(head <- integers; tail <- lists) yield head :: tail
 def lists: Generator[List[Int]] = for {
@@ -63,6 +63,10 @@ def lists: Generator[List[Int]] = for {
 } yield lists
 
 for ( i <- 0 until 10 ) yield lists.generate
+for ( i <- 0 until 10 ) yield bools.generate
+
 for ( i <- 0 until 10 ) yield oneOf("apple", "orange", "pineapple").generate
+for ( i <- 0 until 10 ) yield bools.generate
+
 
 

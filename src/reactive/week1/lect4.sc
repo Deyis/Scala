@@ -11,7 +11,7 @@ trait  M[T] {
 }
 
 
-object Try extends Try[Any] {
+object Try {
 
   def apply[T](expr: => T): Try[T] =
     try new Succes[T](expr)

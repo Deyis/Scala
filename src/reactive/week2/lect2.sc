@@ -15,33 +15,36 @@ object REPEAT {
   def apply(command: => Unit): Repeat = {
     new Repeat(command)
   }
+
+  class Repeat(command: => Unit) {
+    def UNTIL(condition: => Boolean): Unit = {
+      command
+      if(condition) {
+        ()
+      } else {
+        REPEAT(command).UNTIL(condition)
+      }
+    }
+  }
+
 }
 object DO {
   def apply(command: => Unit): Do = {
     new Do(command)
   }
-}
-class Do(command: => Unit) {
-  def WHILE(condition: => Boolean): Unit = {
-    command
-    if(condition) {
-      DO(command).WHILE(condition)
-    } else {
-      ()
+
+  class Do(command: => Unit) {
+    def WHILE(condition: => Boolean): Unit = {
+      command
+      if(condition) {
+        DO(command).WHILE(condition)
+      } else {
+        ()
+      }
     }
   }
 }
 
-class Repeat(command: => Unit) {
-  def UNTIL(condition: => Boolean): Unit = {
-    command
-    if(condition) {
-      ()
-    } else {
-      REPEAT(command).UNTIL(condition)
-    }
-  }
-}
 
 var j = 0
 REPEAT {

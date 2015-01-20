@@ -97,7 +97,7 @@ class Gates extends Simulation with Parameters {
 
   def probe(name: String, wire: Wire): Unit = {
     def probeAction(): Unit = {
-      println(s"$name $currentTime value = ${wire.getSignal}" )
+      println(s"'$name': time: $currentTime, value = ${wire.getSignal}" )
     }
     wire addAction probeAction
   }
